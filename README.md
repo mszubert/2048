@@ -1,21 +1,14 @@
 N-Tuple Networks for the Game 2048 
 ==============================
 
-This code allows to produce a performance profile for a weighted piece counter
-(WPC) strategy for Othello.
-
-For more information refer to:
-
-Jaśkowski, W.; Liskowski, P.; Szubert, M. & Krawiec, K. Blum, C. (Ed.) 
-Improving Coevolution by Random Sampling GECCO'13: Proceedings of the 15th 
-annual conference on Genetic and Evolutionary Computation, ACM, 2013 
-www.cs.put.poznan.pl/wjaskowski/
-
+This code allows to use n-tuple networks as an evaluation function for the game 2048.
+For more information please refer to: <http://www.cs.put.poznan.pl/mszubert/projects/2048.html>
 
 Authors
 -------
-Wojciech Jaśkowski <wjaskowski@cs.put.poznan.pl>
-Paweł Liskowski <pliskowski@cs.put.poznan.pl>
+* Marcin Szubert (<http://www.cs.put.poznan.pl/mszubert>)
+* Wojciech Jaśkowski (<http://www.cs.put.poznan.pl/wjaskowski>)
+* Paweł Liskowski
 
 
 Building
@@ -27,11 +20,8 @@ mvn package
 
 Running
 -------
-cd cevo-experiments
-wget http://www.cs.put.poznan.pl/wjaskowski/pub/gecco2013/othello-pprofile-db-random-new.dump
-java -Dlog4j.configuration=file:log4j.properties -jar ../cevo-dist/target/cevo-dist-1.0-single.jar wpc1.txt
 
-where wpc1.txt is a file with WPC strategy representation
+java -jar target/2048-1.0-jar-with-dependencies.jar players/best_standard_network.bin 100
 
 
 License
