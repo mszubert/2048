@@ -2,7 +2,7 @@ N-Tuple Networks for the Game 2048
 ==============================
 
 This code allows to use n-tuple networks as an evaluation function for the game 2048.
-For more information please refer to: <http://www.cs.put.poznan.pl/mszubert/projects/2048.html>
+For more information please visit <http://www.cs.put.poznan.pl/mszubert/projects/2048.html>
 
 Authors
 -------
