@@ -21,7 +21,7 @@ public class SerializationManagerFactory {
 		serializers.add(new DoubleSerializer());
 		serializers.add(new IntArraySerializer());
 		serializers.add(new IntegerSerializer());
-		serializers.add(new ListSerializer());
+		serializers.add(new ListSerializer<>());
 
 		for (ObjectSerializer<?> serializer : serializers) {
 			try {

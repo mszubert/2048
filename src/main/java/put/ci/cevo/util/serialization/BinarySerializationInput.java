@@ -1,6 +1,5 @@
 package put.ci.cevo.util.serialization;
 
-import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
