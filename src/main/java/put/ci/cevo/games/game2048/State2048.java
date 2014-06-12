@@ -17,7 +17,7 @@ public class State2048 implements State {
 	public static final int NUM_INITIAL_LOCATIONS = 2;
 	public static final double RANDOM_FOUR_PROB = 0.1;
 
-	private static int REWARDS[] = { 0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384 };
+	public static int REWARDS[] = { 0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384 };
 
 	private final int board[][];
 

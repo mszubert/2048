@@ -3,6 +3,11 @@ package put.ci.cevo.games.game2048;
 import java.io.File;
 import java.util.List;
 
+import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
+
 import org.apache.commons.math3.random.RandomDataGenerator;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
@@ -24,7 +29,7 @@ public class NTuplePlayer2048 implements Player2048 {
 	private final static SerializationManager serializer = SerializationManagerFactory.create(Lists.newArrayList(
 		new NTuplesSerializer(), new NTupleSerializer(), new IdentitySymmetryExpanderSerializer(),
 		new StandardSymmetryExpanderSerializer()));
-	
+
 	private final static Game2048 game = new Game2048();
 
 	private NTuples ntuples;
@@ -65,22 +70,32 @@ public class NTuplePlayer2048 implements Player2048 {
 	public void evaluate(int numGames, RandomDataGenerator random) {
 		double wonGames = 0;
 		SummaryStatistics stats = new SummaryStatistics();
-		for (int j = 0; j <= numGames; j++) {
+		for (int j = 0; j < numGames; j++) {
 			Pair<Integer, Integer> res = game.playGame(this, random);
-			if (res.second() >= 2048) {
+			if (res.second() > State2048.REWARDS[10]) {
 				wonGames += 1.0;
 			}
 			stats.addValue(res.first());
 		}
 
-		System.out.println(stats.getMean());
-		System.out.println(stats.getStandardDeviation());
+		System.out.println("Average score: " + stats.getMean());
+		System.out.println("Standard deviation: " + stats.getStandardDeviation());
 
-		System.out.println(wonGames / numGames);
+		System.out.println("Win ratio: " + (wonGames / numGames));
 	}
 
 	public static void main(String[] args) {
-		NTuplePlayer2048 player = readPlayer(new File(args[0]));
-		player.evaluate(1000, new RandomDataGenerator());
+		ArgumentParser parser = ArgumentParsers.newArgumentParser("2048.jar").description(
+			"Evaluates n-tuple network players on the game 2048.");
+		parser.addArgument("file").metavar("player_file").type(String.class).help("serialized n-tuple network player");
+		parser.addArgument("numgames").metavar("num_games").type(Integer.class).help("number of games");
+
+		try {
+			Namespace res = parser.parseArgs(args);
+			NTuplePlayer2048 player = readPlayer(new File(res.getString("file")));
+			player.evaluate(res.getInt("numgames"), new RandomDataGenerator());
+		} catch (ArgumentParserException e) {
+			parser.handleError(e);
+		}
 	}
 }
