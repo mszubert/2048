@@ -8,7 +8,7 @@ Authors
 -------
 * Marcin Szubert (<http://www.cs.put.poznan.pl/mszubert>)
 * Wojciech Jaśkowski (<http://www.cs.put.poznan.pl/wjaskowski>)
-* Paweł Liskowski
+* Paweł Liskowski (<http://www.cs.put.poznan.pl/pliskowski>)
 
 
 Building
@@ -23,6 +23,10 @@ Running
 
 java -jar target/2048-1.0-jar-with-dependencies.jar players/best_standard_network.bin 100
 
+
+Citing
+------
+Temporal Difference Learning of N-Tuple Networks for the Game 2048, Marcin Szubert and Wojciech Jaśkowski, Proceedings of IEEE Conference on Computational Intelligence and Games, August 2014, Dortmund, Germany [preprint](http://http://www.cs.put.poznan.pl/mszubert/pub/szubert2014cig.pdf "preprint")
 
 License
 -------
