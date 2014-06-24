@@ -26,7 +26,7 @@ java -jar target/2048-1.0-jar-with-dependencies.jar players/best_standard_networ
 
 Citing
 ------
-Temporal Difference Learning of N-Tuple Networks for the Game 2048, Marcin Szubert and Wojciech Jaśkowski, Proceedings of IEEE Conference on Computational Intelligence and Games, August 2014, Dortmund, Germany ([preprint](http://http://www.cs.put.poznan.pl/mszubert/pub/szubert2014cig.pdf "preprint"))
+Temporal Difference Learning of N-Tuple Networks for the Game 2048, Marcin Szubert and Wojciech Jaśkowski, Proceedings of IEEE Conference on Computational Intelligence and Games, August 2014, Dortmund, Germany ([preprint](http://www.cs.put.poznan.pl/mszubert/pub/szubert2014cig.pdf "preprint"))
 
 License
 -------
