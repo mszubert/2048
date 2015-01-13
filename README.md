@@ -17,12 +17,15 @@ You need Java 1.7 and Maven. To build execute:
 
 mvn package
 
-
 Running
 -------
 
 java -jar target/2048-1.0-jar-with-dependencies.jar players/best_standard_network.bin 100
 
+Learning
+--------
+
+see [CIG2048ExperimentTDL](https://github.com/mszubert/2048/blob/master/src/main/java/put/ci/cevo/games/experiments/CIG2048ExperimentTDL.java) class
 
 Citing
 ------
