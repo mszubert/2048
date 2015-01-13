@@ -30,7 +30,7 @@ public class StandardSymmetryExpander implements SymmetryExpander {
 
 		// @formatter:off
 		int[] a = new int[] {
-			flat(c, r),			// This must be first according to the contract
+			flat(c, r),
 			flat(M - c, r),
 			flat(c, M - r),
 			flat(M - c, M - r),
@@ -47,7 +47,7 @@ public class StandardSymmetryExpander implements SymmetryExpander {
 	}
 
 	public int flat(int c, int r) {
-		return BoardUtils.toPos(boardSize, r, c);
+		return BoardUtils.toMarginPos(boardSize, r, c);
 	}
 
 	public int boardSize() {

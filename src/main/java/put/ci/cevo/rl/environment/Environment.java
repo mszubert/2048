@@ -15,6 +15,4 @@ public interface Environment<S extends State, A extends Action> {
 	S sampleInitialStateDistribution(RandomDataGenerator random);
 
 	boolean isTerminalState(S state);
-	
-	double getAgentPerformance(double totalReward, int numSteps, S finalState); 
 }

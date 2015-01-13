@@ -3,44 +3,19 @@ package put.ci.cevo.games.game2048;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import com.google.common.base.Preconditions;
 import put.ci.cevo.games.board.Board;
 import put.ci.cevo.games.board.BoardUtils;
-import put.ci.cevo.games.game2048.State2048;
-
-import com.google.common.base.Preconditions;
 
 public class Game2048Board implements Board, Serializable {
 
-	private static final long serialVersionUID = -644521001307920823L;
-
-	public static final int SIZE = State2048.BOARD_SIZE;
-	public static final int NUM_VALUES = State2048.getNumValues();
-	public static final int NUM_FIELDS = SIZE * SIZE;
-
+	public static final int SIZE = State2048.SIZE;
 	static final int MARGIN_WIDTH = BoardUtils.MARGIN_WIDTH;
 	static final int WIDTH = SIZE + 2 * MARGIN_WIDTH;
 	static final int BUFFER_SIZE = WIDTH * WIDTH;
 	static final int WALL = -2;
-	static final int DIRS[] = { -WIDTH - 1, -WIDTH, -WIDTH + 1, -1, +1, WIDTH - 1, WIDTH, WIDTH + 1 };
 
 	final int[] buffer;
-
-	public Game2048Board() {
-		buffer = new int[BUFFER_SIZE];
-		initBoard();
-	}
-
-	public Game2048Board(int[][] board) {
-		assert board.length == SIZE;
-		buffer = new int[BUFFER_SIZE];
-		initMargins();
-		for (int r = 0; r < board.length; r++) {
-			assert board[r].length == SIZE;
-			for (int c = 0; c < board[r].length; c++) {
-				setValue(r, c, board[r][c]);
-			}
-		}
-	}
 
 	private Game2048Board(int[] buffer) {
 		Preconditions.checkArgument(buffer.length == BUFFER_SIZE);
@@ -75,11 +50,6 @@ public class Game2048Board implements Board, Serializable {
 		return row * WIDTH + col;
 	}
 
-	private void initBoard() {
-		Arrays.fill(buffer, Board.EMPTY);
-		initMargins();
-	}
-
 	public int getSize() {
 		return SIZE;
 	}
@@ -87,11 +57,6 @@ public class Game2048Board implements Board, Serializable {
 	@Override
 	public void setValue(int row, int col, int color) {
 		buffer[toPos(row, col)] = color;
-	}
-
-	@Override
-	public void setValue(int pos, int color) {
-		buffer[pos] = color;
 	}
 
 	private void setValueInternal(int row, int col, int color) {
@@ -108,35 +73,11 @@ public class Game2048Board implements Board, Serializable {
 		return buffer[pos];
 	}
 
-	public boolean isEmpty(int row, int col) {
-		return isEmpty(toPos(row, col));
-	}
-
-	boolean isEmpty(int pos) {
-		return buffer[pos] == EMPTY;
-	}
-
-	boolean isInBoard(int pos) {
-		return buffer[pos] != WALL;
-	}
-
-	boolean isWall(int pos) {
-		return buffer[pos] == WALL;
-	}
-
 	/**
 	 * Watch out: this position is margin-based (not 0-based)
-	 *
-	 * TODO: Should be package private
 	 */
 	public static int toPos(int row, int col) {
 		return (row + 1) * WIDTH + (col + 1);
-	}
-
-	public static String posToString(int pos) {
-		int row = BoardUtils.rowFromPos(pos, SIZE);
-		int col = BoardUtils.colFromPos(pos, SIZE);
-		return (char) ('A' + row) + "" + (col + 1);
 	}
 
 	@Override
@@ -178,28 +119,9 @@ public class Game2048Board implements Board, Serializable {
 		return Arrays.hashCode(buffer);
 	}
 
-	public String toJavaArrayString() {
-		StringBuilder str = new StringBuilder();
-		str.append("new int[][] {\n");
-		for (int r = 0; r < SIZE; r++) {
-			str.append("{");
-			for (int c = 0; c < SIZE; c++) {
-				str.append(getValue(r, c) + ",");
-			}
-			str.append("},\n");
-		}
-		str.append("}");
-		return str.toString();
-	}
-
 	@Override
 	public Game2048Board clone() {
 		return new Game2048Board(this.buffer);
-	}
-
-	@Override
-	public Board createAfterState(int row, int col, int player) {
-		throw new RuntimeException("Not implemented");
 	}
 
 	@Override
@@ -212,9 +134,4 @@ public class Game2048Board implements Board, Serializable {
 		return getSize();
 	}
 
-	@Override
-	public void invert() {
-		// TODO Auto-generated method stub
-		// FIXME
-	}
 }

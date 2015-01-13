@@ -2,6 +2,7 @@ package put.ci.cevo.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class CollectionUtils {
 
@@ -13,12 +14,12 @@ public class CollectionUtils {
 		return s;
 	}
 
-	public static double average(Collection<Double> arr) {
-		if (arr.size() > 0) {
-			return sum(arr) / arr.size();
-		} else {
-			return 0;
+	public static <T> List<T> flatten(Collection<? extends Collection<T>> arr) {
+		ArrayList<T> res = new ArrayList<>();
+		for (Collection<T> list : arr) {
+			res.addAll(list);
 		}
+		return res;
 	}
 
 	public static <T> ArrayList<T> concat(Collection<T> arr1, Collection<T> arr2) {

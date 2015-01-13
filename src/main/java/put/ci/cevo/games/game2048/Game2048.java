@@ -43,11 +43,6 @@ public class Game2048 implements Environment<State2048, Action2048> {
 		return state.isTerminal();
 	}
 
-	@Override
-	public double getAgentPerformance(double totalReward, int numSteps, State2048 finalState) {
-		return 0;
-	}
-
 	public Pair<Integer, Integer> playGame(Player2048 player, RandomDataGenerator random) {
 		int sumRewards = 0;
 

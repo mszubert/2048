@@ -55,13 +55,6 @@ public class NTuplePlayer2048 implements Player2048 {
 		return bestAction;
 	}
 
-	public String chooseAction(double[] features) {
-		State2048 state = new State2048(features);
-		List<Action2048> actions = game.getPossibleActions(state);
-		Action2048 chosenAction = chooseAction(state, actions);
-		return chosenAction.toString();
-	}
-
 	public static NTuplePlayer2048 readPlayer(File file) {
 		NTuples ntuples = serializer.deserializeWrapExceptions(file);
 		return new NTuplePlayer2048(ntuples);

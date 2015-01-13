@@ -2,29 +2,24 @@ package put.ci.cevo.games.encodings.ntuple;
 
 import static put.ci.cevo.util.ArrayUtils.sorted;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import org.apache.commons.math3.random.RandomDataGenerator;
-
-import put.ci.cevo.games.encodings.ntuple.expanders.SymmetryExpander;
+import java.util.*;
 
 import com.google.common.primitives.Ints;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.math3.random.RandomDataGenerator;
+import put.ci.cevo.games.encodings.ntuple.expanders.SymmetryExpander;
+import put.ci.cevo.games.encodings.ntuple.expanders.SymmetryUtils;
+import put.ci.cevo.util.CollectionUtils;
 
 /**
  * Builds NTuple with random weights. Excludes any tuple duplicates and any "subtuples"
- * 
- * @author Wojciech Jaśkowski
  */
 public class NTuplesBuilder {
 
 	private final RandomDataGenerator random;
 
-	private final List<int[]> all = new ArrayList<int[]>();
-	private final List<NTuple> main = new ArrayList<NTuple>();
+	private final List<List<int[]>> all = new ArrayList<>();
+	private final List<int[]> main = new ArrayList<>();
 
 	private final SymmetryExpander expander;
 
@@ -46,50 +41,82 @@ public class NTuplesBuilder {
 	}
 
 	public void addTuple(int[] locations) {
-		// All contains all tuples added to the builder along with all their symmetry expansions
+		// All contains all tuples added to the builder along with all their symmetry expansions. Sorted for efficiency.
 
-		// We don't want duplicates
-		for (int[] tuple : all) {
-			if (Arrays.equals(sorted(tuple), sorted(locations))) {
+		// Remove duplicates right away (regardless of the order)
+		int[] sortedLocations = sorted(locations);
+		for (int[] sortedTuple : CollectionUtils.flatten(all)) {
+			if (Arrays.equals(sortedTuple, sortedLocations)) {
 				return;
 			}
 		}
 
-		if (removeSubtuples) {
-			throw new RuntimeException("Not implemeneted");
-			// Code inspection revealed that this will not work correctly, since we sometimes remove subtuples from all
-			// (all.remove(my)), but we never remove from main!
-
-//			for (IntArrayList my : all) {
-//				if (locations.size() != my.size()) {
-//					TreeSet<Integer> myset = new TreeSet<Integer>(asList(sorted(my.toArray())));
-//					TreeSet<Integer> arrset = new TreeSet<Integer>(asList(sorted(locations.toArray())));
-//					if (myset.containsAll(arrset)) {
-//						return;
-//					}
-//					if (arrset.containsAll(myset)) {
-//						all.remove(my);
-//					}
-//				}
-//			}
+		List<int[]> tmp = new ArrayList<>();
+		for (int[] tuple : SymmetryUtils.createSymmetric(locations, expander)) {
+			tmp.add(sorted(tuple));
 		}
-
-		all.addAll(NTupleUtils.createSymmetric(locations, expander));
-
-		main.add(NTuple.newWithRandomWeights(numValues, locations, minWeight, maxWeight, random));
+		all.add(tmp);
+		main.add(sorted(locations));
 	}
 
 	public NTuples buildNTuples() {
-		ArrayList<NTuple> mainSorted = new ArrayList<>(main);
+		List<int[]> newMain = new ArrayList<>(main);
+		if (removeSubtuples) {
+			newMain = getMainWithoutDuplicates();
+		}
 
+		ArrayList<NTuple> mainSorted = createNTuplesFromLocations(newMain);
+
+		//TODO: It is a bit stupid that the symmetry is applied inside NTuples (for the second time, in fact)
+		return new NTuples(mainSorted, expander);
+	}
+
+	private ArrayList<NTuple> createNTuplesFromLocations(List<int[]> newMain) {
+		List<NTuple> mainNtuples = new ArrayList<>();
+		for (int[] locations : newMain) {
+			mainNtuples.add(NTuple.newWithRandomWeights(numValues, locations, minWeight, maxWeight, random));
+		}
 		// Sorting is not obligatory, but does not harm and eases some tests
-		Collections.sort(mainSorted, new Comparator<NTuple>() {
+		Collections.sort(mainNtuples, new Comparator<NTuple>() {
 			@Override
 			public int compare(NTuple ntuple1, NTuple ntuple2) {
 				return Ints.lexicographicalComparator().compare(ntuple1.getLocations(), ntuple2.getLocations());
 			}
 		});
+		return new ArrayList<>(mainNtuples);
+	}
 
-		return new NTuples(mainSorted, expander);
+	private List<int[]> getMainWithoutDuplicates() {
+		List<int[]> newMain = new ArrayList<>();
+		int n = main.size();
+		for (int a = 0; a < n; ++a) {
+			boolean aIsSubtupleOfB = false;
+			for (int b = 0; b < n && !aIsSubtupleOfB; ++b) {
+				if (a == b || main.get(a).length > main.get(b).length) {
+					continue;
+				}
+				aIsSubtupleOfB = containsAll(all.get(b), all.get(a));
+			}
+			if (!aIsSubtupleOfB) {
+				newMain.add(main.get(a));
+			}
+		}
+		return newMain;
+	}
+
+	private boolean containsAll(List<int[]> container, List<int[]> containee) {
+		for (int[] containerElement : container) {
+			HashSet<Integer> containerElementSet = new HashSet<>(Arrays.asList(ArrayUtils.toObject(containerElement)));
+			boolean found = false;
+			for (int[] containeeElement : containee) {
+				if (containerElementSet.containsAll(Arrays.asList(ArrayUtils.toObject(containeeElement)))) {
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+				return false;
+		}
+		return true;
 	}
 }
